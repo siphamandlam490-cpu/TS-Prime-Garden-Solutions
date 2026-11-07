@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Request professional garden care from TS Prime Garden Solutions.">
+  <title>Request a Service | TS Prime Garden Solutions</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('index') }}" aria-label="TS Prime Garden Solutions home">
+      <span class="brand-mark" aria-hidden="true">TS</span>
+      <span><strong>TS PRIME</strong><small>GARDEN SOLUTIONS</small></span>
+    </a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="{{ url_for('index') }}">Home</a><a href="{{ url_for('services') }}">Services</a><a class="nav-cta" href="{{ url_for('request_service') }}">Request a service</a></nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">LET'S GROW SOMETHING BEAUTIFUL</p>
+        <h1>Your garden.<br><span>Our expertise.</span></h1>
+        <p class="hero-description">Tell us what your garden needs. Share a photo, describe the work and our team can follow up with you.</p>
+        <div class="hero-points">
+          <span><span aria-hidden="true">✓</span> Lawn care</span>
+          <span><span aria-hidden="true">✓</span> Weed removal</span>
+          <span><span aria-hidden="true">✓</span> Garden maintenance</span>
+        </div>
+      </div>
+      <div class="hero-art" role="img" aria-label="Illustration of a garden with plants and leaves">
+        <div class="sun"></div><div class="hill hill-back"></div><div class="hill hill-front"></div>
+        <div class="plant plant-one"><i></i><i></i><i></i><b></b></div>
+        <div class="plant plant-two"><i></i><i></i><i></i><b></b></div>
+        <div class="flower flower-one"><i></i><i></i><i></i><i></i><i></i><b></b></div>
+        <div class="flower flower-two"><i></i><i></i><i></i><i></i><i></i><b></b></div>
+      </div>
+    </section>
+
+    <section class="form-layout">
+      <aside class="form-aside">
+        <p class="eyebrow">SERVICE REQUEST</p>
+        <h2>Let's talk about your garden.</h2>
+        <p>Complete the form and provide accurate contact details so we can get back to you.</p>
+        <div class="aside-tip">
+          <span class="tip-icon" aria-hidden="true">✦</span>
+          <div><strong>Tip for a better quote</strong><p>A clear photo of the area helps us understand the grass, plants or weeds you want us to look at.</p></div>
+        </div>
+        <div class="privacy-note">
+          <span aria-hidden="true">🔒</span>
+          <p>Your contact details and photos are submitted for the purpose of handling your garden service request.</p>
+        </div>
+      </aside>
+
+      <div class="form-card">
+        <div class="form-heading">
+          <div><p class="eyebrow">NEW ENQUIRY</p><h2>Request a garden service</h2></div>
+          <span class="required-note">* Required</span>
+        </div>
+
+        {% if database_error %}
+          <div class="alert alert-error" role="alert">We couldn't save your request right now. Please try again in a moment.</div>
+        {% endif %}
+
+        <form method="post" enctype="multipart/form-data" novalidate>
+          {{ form.hidden_tag() }}
+
+          <div class="field">
+            {{ form.full_name.label(class_="field-label") }} <span class="required">*</span>
+            {{ form.full_name(class_="text-input", placeholder="e.g. Thabo Mokoena", autocomplete="name", maxlength="100") }}
+            {% for error in form.full_name.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+          </div>
+
+          <div class="field-grid">
+            <div class="field">
+              {{ form.cellphone.label(class_="field-label") }} <span class="required">*</span>
+              {{ form.cellphone(class_="text-input", placeholder="e.g. 071 234 5678", autocomplete="tel", inputmode="tel") }}
+              {% for error in form.cellphone.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+            <div class="field">
+              {{ form.email.label(class_="field-label") }} <span class="required">*</span>
+              {{ form.email(class_="text-input", placeholder="you@example.com", autocomplete="email", type="email") }}
+              {% for error in form.email.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+            </div>
+          </div>
+
+          <div class="field">
+            {{ form.garden_location.label(class_="field-label") }} <span class="required">*</span>
+            {{ form.garden_location(class_="text-input", placeholder="Street address, suburb, town or area", autocomplete="street-address", maxlength="250") }}
+            <p class="field-help">Enter the property address or enough location detail for us to identify the area.</p>
+            {% for error in form.garden_location.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+          </div>
+
+          <div class="field">
+            {{ form.service_required.label(class_="field-label") }} <span class="required">*</span>
+            {{ form.service_required(class_="text-input select-input") }}
+            {% for error in form.service_required.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+          </div>
+
+          <div class="field">
+            {{ form.work_description.label(class_="field-label") }} <span class="required">*</span>
+            {{ form.work_description(class_="text-input text-area", placeholder="Tell us what the garden looks like and what you would like done...", rows="5", maxlength="2000") }}
+            <div class="field-bottom"><p class="field-help">10–2,000 characters. Please don't include passwords or other sensitive information.</p><span id="description-count">0 / 2000</span></div>
+            {% for error in form.work_description.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+          </div>
+
+          <div class="field">
+            {{ form.photo.label(class_="field-label") }}
+            <div class="upload-actions">
+              <label class="upload-box" for="photo">
+                <span class="upload-icon" aria-hidden="true">＋</span>
+                <span><strong>Choose an existing photo</strong><small>JPG, PNG or WebP · Maximum 5 MB</small></span>
+              </label>
+              <button class="camera-button" id="camera-open" type="button"><span aria-hidden="true">📷</span> Take a photo now</button>
+            </div>
+            {{ form.photo(id="photo", class_="file-input", accept="image/jpeg,image/png,image/webp") }}
+            <p class="field-help">Optional, but a clear photo can help us understand the work required.</p>
+            <div id="photo-name" class="photo-name" aria-live="polite"></div>
+            <img id="photo-preview" class="photo-preview" alt="Preview of the selected garden photo" hidden>
+            {% for error in form.photo.errors %}<p class="field-error">{{ error }}</p>{% endfor %}
+          </div>
+
+          <button class="submit-button" type="submit">Send garden service request <span aria-hidden="true">→</span></button>
+          <p class="submit-note">Your request will be saved so the business can follow up with you.</p>
+        </form>
+      </div>
+    </section>
+    <div id="camera-dialog" class="camera-dialog" role="dialog" aria-modal="true" aria-labelledby="camera-title" hidden>
+      <div class="camera-panel"><h2 id="camera-title">Take a garden photo</h2><p class="field-help">Allow camera access when your browser asks.</p><video id="camera-video" autoplay playsinline></video><canvas id="camera-canvas" hidden></canvas><p id="camera-error" class="field-error" role="alert"></p><div class="camera-controls"><button class="camera-button" id="camera-close" type="button">Cancel</button><button class="submit-button" id="camera-capture" type="button">Capture photo</button></div></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <a class="brand footer-brand" href="{{ url_for('index') }}"><span class="brand-mark" aria-hidden="true">TS</span><span><strong>TS PRIME</strong><small>GARDEN SOLUTIONS</small></span></a>
+    <p>Growing greener spaces, one garden at a time.</p>
+    <small>© {{ 2026 }} TS Prime Garden Solutions</small>
+  </footer>
+
+  <script src="{{ url_for('static', filename='site.js') }}" defer></script>
+</body>
+</html>

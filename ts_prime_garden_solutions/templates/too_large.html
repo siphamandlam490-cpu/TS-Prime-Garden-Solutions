@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Upload Too Large | TS Prime Garden Solutions</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="success-page">
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark" aria-hidden="true">TS</span><span><strong>TS PRIME</strong><small>GARDEN SOLUTIONS</small></span></a>
+  </header>
+  <main class="success-main"><div class="success-card">
+    <div class="success-icon error-icon" aria-hidden="true">!</div>
+    <h1>That upload is too large.</h1>
+    <p>The total form upload is over the allowed limit. Please choose a garden photo under 5 MB and try again.</p>
+    <a class="submit-button link-button" href="{{ url_for('request_service') }}">Back to the form <span aria-hidden="true">→</span></a>
+  </div></main>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Requests | TS Prime Admin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="admin-page">
+  <header class="admin-header">
+    <a class="brand" href="{{ url_for('admin_dashboard') }}"><span class="brand-mark">TS</span><span><strong>TS PRIME</strong><small>ADMIN DASHBOARD</small></span></a>
+    <form method="post" action="{{ url_for('admin_logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="logout-button" type="submit">Sign out</button></form>
+  </header>
+  <main class="dashboard">
+    {% for category, message in get_flashed_messages(with_categories=true) %}<div class="dashboard-alert {{ category }}" role="status">{{ message }}</div>{% endfor %}
+    <div class="dashboard-heading">
+      <div><p class="eyebrow">CUSTOMER ENQUIRIES</p><h1>Garden requests</h1><p class="muted">Search requests, track progress and keep internal notes.</p></div>
+      <a class="export-button" href="{{ url_for('admin_export', q=search, status=status_filter) }}">Download CSV report</a>
+    </div>
+    <details class="account-settings"><summary>Change admin password</summary>
+      <form method="post" action="{{ url_for('admin_change_password') }}">
+        {{ password_form.hidden_tag() }}
+        <label><span>Current password</span>{{ password_form.current_password(class_="text-input", autocomplete="current-password") }}</label>
+        <label><span>New password <small>(12 characters minimum)</small></span>{{ password_form.new_password(class_="text-input", autocomplete="new-password", minlength="12", maxlength="128") }}</label>
+        <label><span>Confirm new password</span>{{ password_form.confirm_password(class_="text-input", autocomplete="new-password", minlength="12", maxlength="128") }}</label>
+        <button class="filter-button" type="submit">Change password</button>
+      </form>
+    </details>
+    <section class="status-summary" aria-label="Request counts">
+      <a class="status-summary-card" href="{{ url_for('admin_dashboard') }}"><span>All requests</span><strong>{{ total }}</strong></a>
+      {% for code, label in status_choices %}<a class="status-summary-card" href="{{ url_for('admin_dashboard', status=code) }}"><span>{{ label }}</span><strong>{{ counts.get(code, 0) }}</strong></a>{% endfor %}
+    </section>
+    <form class="request-filters" method="get" action="{{ url_for('admin_dashboard') }}">
+      <label><span>Search requests</span><input type="search" name="q" value="{{ search }}" placeholder="Name, reference, phone, email or area"></label>
+      <label><span>Status</span><select name="status"><option value="">All statuses</option>{% for code, label in status_choices %}<option value="{{ code }}" {% if status_filter == code %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+      <button class="filter-button" type="submit">Apply filters</button>
+      {% if search or status_filter %}<a class="clear-filter" href="{{ url_for('admin_dashboard') }}">Clear</a>{% endif %}
+    </form>
+    <div class="result-summary"><span>{{ requests|length }} matching request{% if requests|length != 1 %}s{% endif %}{% if total > 500 and not search and not status_filter %} · showing the newest 500{% endif %}</span></div>
+    {% if requests %}
+      <div class="request-list">
+      {% for item in requests %}
+        <article class="request-card">
+          <div class="request-top"><div><span class="reference">{{ item.reference_code }}</span><span class="status-badge status-{{ item.status }}">{{ status_names.get(item.status, item.status|title) }}</span></div><time>{{ item.created_at|replace('T', ' ')|replace('+00:00', ' UTC') }}</time></div>
+          <div class="request-columns">
+            <section><p class="eyebrow">CUSTOMER</p><h2>{{ item.full_name }}</h2><p><a href="tel:{{ item.cellphone }}">{{ item.cellphone }}</a></p><p><a href="mailto:{{ item.email }}">{{ item.email }}</a></p></section>
+            <section><p class="eyebrow">REQUEST</p><h3>{{ service_names.get(item.service_required, item.service_required) }}</h3><p>{{ item.garden_location }}</p><p class="description">{{ item.work_description }}</p>{% if item.photo_filename %}<a class="photo-link" href="{{ url_for('admin_photo', request_id=item.id) }}" target="_blank" rel="noopener">View submitted photo ↗</a>{% endif %}</section>
+          </div>
+          {% if item.admin_notes %}<div class="saved-notes"><strong>Internal notes</strong><p>{{ item.admin_notes }}</p></div>{% endif %}
+          <details class="request-edit"><summary>Update status or internal notes</summary>
+            <form method="post" action="{{ url_for('admin_update_request', request_id=item.id, q=search, status=status_filter) }}">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <label><span>Status</span><select name="status">{% for code, label in status_choices %}<option value="{{ code }}" {% if item.status == code %}selected{% endif %}>{{ label }}</option>{% endfor %}</select></label>
+              <label class="notes-field"><span>Internal notes <small>(up to 2,000 characters; only admins can see these)</small></span><textarea name="admin_notes" rows="3" maxlength="2000" placeholder="Follow-up details, quote notes, scheduling...">{{ item.admin_notes }}</textarea></label>
+              <button class="filter-button" type="submit">Save update</button>
+            </form>
+          </details>
+        </article>
+      {% endfor %}
+      </div>
+    {% else %}
+      <section class="empty-state"><span>✿</span><h2>{% if search or status_filter %}No matching requests{% else %}No requests yet{% endif %}</h2><p>{% if search or status_filter %}Try changing or clearing your filters.{% else %}New customer enquiries will appear here.{% endif %}</p></section>
+    {% endif %}
+  </main>
+</body>
+</html>

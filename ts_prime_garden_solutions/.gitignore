@@ -1,0 +1,10 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+
+# Local customer data and uploaded images (do not commit customer details)
+instance/*
+!instance/.gitkeep

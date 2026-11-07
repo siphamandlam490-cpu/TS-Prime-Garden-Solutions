@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Request Received | TS Prime Garden Solutions</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="success-page">
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark" aria-hidden="true">TS</span><span><strong>TS PRIME</strong><small>GARDEN SOLUTIONS</small></span></a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="{{ url_for('index') }}">Home</a><a href="{{ url_for('services') }}">Services</a><a class="nav-cta" href="{{ url_for('request_service') }}">Request a service</a></nav>
+  </header>
+  <main class="success-main">
+    <div class="success-card">
+      <div class="success-icon" aria-hidden="true">✓</div>
+      <p class="eyebrow">REQUEST SAVED</p>
+      <h1>Thank you for contacting us.</h1>
+      <p>Your garden service request has been saved. Keep this reference code in case you need to refer to your enquiry.</p>
+      <div class="reference-box"><span>YOUR REFERENCE</span><strong>{{ reference }}</strong></div>
+      <p class="success-small">Our team will review your enquiry and follow up using the contact details you provided.</p>
+      <a class="submit-button link-button" href="{{ url_for('request_service') }}">Submit another request <span aria-hidden="true">→</span></a>
+    </div>
+  </main>
+  <footer class="site-footer"><p>Growing greener spaces, one garden at a time.</p><small>© {{ 2026 }} TS Prime Garden Solutions</small></footer>
+</body>
+</html>

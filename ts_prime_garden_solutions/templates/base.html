@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Professional garden care from TS Prime Garden Solutions.">
+  <title>{% block title %}TS Prime Garden Solutions{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="public-page">
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('index') }}"><span class="brand-mark">TS</span><span><strong>TS PRIME</strong><small>GARDEN SOLUTIONS</small></span></a>
+    <nav class="main-nav" aria-label="Main navigation"><a href="{{ url_for('index') }}">Home</a><a href="{{ url_for('services') }}">Services</a><a class="nav-cta" href="{{ url_for('request_service') }}">Request a service</a></nav>
+  </header>
+  {% block content %}{% endblock %}
+  <footer class="site-footer"><a class="brand footer-brand" href="{{ url_for('index') }}"><span class="brand-mark">TS</span><span><strong>TS PRIME</strong><small>GARDEN SOLUTIONS</small></span></a><p>Growing greener spaces, one garden at a time.</p><small>© 2026 TS Prime Garden Solutions</small></footer>
+</body>
+</html>
